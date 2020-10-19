@@ -8,13 +8,12 @@ catch
     error('Fail to load path.');
 end
 
-
 % ====== 生成OAM波 ========
 
 opt.generate.active = true;
 opt.generate.frequency = 10e9;
 opt.generate.l = 2;
-opt.generate.nElem = 16;
+opt.generate.nElem = 32;
 [sig] = generateOAM(opt.generate);
 
 % ====== 绘制强度图像 ========
