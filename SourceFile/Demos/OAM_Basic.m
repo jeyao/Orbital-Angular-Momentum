@@ -1,3 +1,11 @@
+% =============== 代码介绍 ===============
+%
+%       生成一个模式数为 l 的 OAM 波
+%   ，在距离为 Z0 的平面接收，并绘制出
+%   强度、相位以及两种的轴向图样。
+%
+
+
 clc;
 clear;
 close all;
@@ -13,7 +21,7 @@ end
 opt.generate.active = true;
 opt.generate.frequency = 10e9;
 opt.generate.l = 2;
-opt.generate.nElem = 32;
+opt.generate.nElem = 16;
 [sig] = generateOAM(opt.generate);
 
 % ====== 绘制强度图像 ========

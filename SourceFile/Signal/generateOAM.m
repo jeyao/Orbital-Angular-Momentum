@@ -66,7 +66,4 @@ Y = linspace (-opt.obsRange, opt.obsRange, opt.obsCount);
 opt.sphCoord = sphCoord;
 sig = calcOAM( opt );
 
-sig.physical.frequency = opt.frequency;
-sig.physical.l = opt.l;
-
 end
