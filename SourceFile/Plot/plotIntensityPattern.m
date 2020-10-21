@@ -1,4 +1,4 @@
-function []  = plotIntensityPattern( sig, option )
+function []  = plotIntensityPattern( sig, opt )
 
 % 绘制强度图样
 %
@@ -17,12 +17,12 @@ function []  = plotIntensityPattern( sig, option )
 addpath('..\Common');
 
 % 判断是否可用
-if (isfield(option, 'active') && ~option.active)
+if (isfield(opt, 'active') && ~opt.active)
   return;
 end  
 
-if ~isfield(option,'obsRange') ||...
-    isempty(option.obsRange) 
+if ~isfield(opt,'obsRange') ||...
+    isempty(opt.obsRange) 
     c = 299792458 ;                        % 光速 m/s
     lambda = c / sig.physical.frequency ;           % 波长 m
     opt.obsRange = 25 * lambda;
@@ -49,7 +49,7 @@ end
 surf(x,y,sig.samples{1}.*conj(sig.samples{1}));
 xlim([min(X),max(X)]);
 ylim([min(Y),max(Y)]);
-title(opt.title);
+title( opt.title );
 shading interp;
 view(2);
 
