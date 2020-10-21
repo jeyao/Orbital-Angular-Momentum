@@ -1,7 +1,7 @@
 % Main Method : the back projection(BP) algorithm
 %
 % Reference :
-%   Gui-ron, Guo. “Electromagnetic vortex based radar target imaging.” 
+%   [1] Gui-ron, Guo. “Electromagnetic vortex based radar target imaging.” 
 %   Journal of National University of Defense Technology (2013).
 %
 
@@ -36,12 +36,14 @@ minL = -30;
 
 % ====== 回波信号 ======= 
 
+% Eq (8) in [1]
 s = @(mode) exp(1i*2*k*rm)/rm^2 ...
     .* exp (1i*2*mode*phim) ...
     .* besselj(mode, k * a * sin(thetam)).^2;
 
 % ====== 逆投影法 ======= 
 
+% Eq (9) in [1]
 r = @(mode,theta,phi) s(mode)...
     .*  exp (-1i*2*mode*phi) ...
     .* conj((besselj(mode, k * a * sin(theta))).^2);

@@ -14,6 +14,7 @@ function [sig] = generateOAM(opt)
 % z0    : 观察平面距天线的距离
 % tilt  : 信号源的倾斜角
 % ============ OUTPUTS ===================
+narginchk(1,1);
 addpath('..\Common');
 addpath('..\Geometry');
 % 判断是否可用
@@ -57,12 +58,9 @@ opt = checkField(opt, 'arrayRadius', {'numeric'},{'real','nonnan'},2*lambda);
 
 % ====== 设置信号基本参数 =======
 
-
-
 X = linspace (-opt.obsRange, opt.obsRange, opt.obsCount);
 Y = linspace (-opt.obsRange, opt.obsRange, opt.obsCount);
 [~,sphCoord] = getObsPlaneCoordinate(X,Y,opt.Z0);
-
 opt.sphCoord = sphCoord;
 sig = calcOAM( opt );
 

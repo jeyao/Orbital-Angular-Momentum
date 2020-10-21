@@ -5,13 +5,13 @@ function [cartCoord,sphCoord] = getObsPlaneCoordinate(X,Y,z0)
     [azimuth, elevation, radius] = cart2sph(x,y,z);   
     elevation = pi/2 - elevation;
     
-    cartCoord.x = x;
-    cartCoord.y = y;
-    cartCoord.z = z;
+    cartCoord(1,:,:) = x;
+    cartCoord(2,:,:) = y;
+    cartCoord(3,:,:) = z;
     
-    sphCoord.azimuth = azimuth;
-    sphCoord.elevation = elevation;
-    sphCoord.radius = radius;
+    sphCoord(1,:,:) = azimuth;
+    sphCoord(2,:,:) = elevation;
+    sphCoord(3,:,:) = radius;
     
 end
 

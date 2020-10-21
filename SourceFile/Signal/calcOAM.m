@@ -1,21 +1,15 @@
 function sig = calcOAM( opt )
-
+    narginchk(1,1);
     addpath('..\Common');
     % 判断是否可用
     if (isfield(opt, 'active') && ~opt.active)
       return;
     end  
     
-    if ~isfield(opt.sphCoord,'radius') ||...
-        isempty(opt.sphCoord.radius) ||... 
-        ~isfield(opt.sphCoord,'azimuth') ||...
-        isempty(opt.sphCoord.azimuth) ||... 
-        ~isfield(opt.sphCoord,'elevation') ||...
-        isempty(opt.sphCoord.elevation)
+    if ~isfield(opt,'sphCoord') ||...
+        isempty(opt.sphCoord)
         error('请输入信号范围');
     end
-    
-    sphCoord = opt.sphCoord ;
     
     if ~isfield(opt,'frequency') ||...
         isempty(opt.frequency) 
@@ -39,13 +33,17 @@ function sig = calcOAM( opt )
     k = 2.0 * pi / lambda;                 % 波数 
     
     opt = checkField(opt, 'arrayRadius', {'numeric'},{'real','nonnan'},2*lambda);
-
+    
+    azimuth(:,:) = opt.sphCoord(1,:,:) ;
+    elevation(:,:) = opt.sphCoord(2,:,:) ;
+    radius(:,:) = opt.sphCoord(3,:,:);
+    
     % ====== 计算辐射场 =======
     
-    E = exp(-1i * k * sphCoord.radius)./sphCoord.radius...
+    E = exp(-1i * k * radius)./radius...
         * opt.nElem * 1i^(opt.l)...
-        .* exp(1i * opt.l * sphCoord.azimuth)...
-        .* besselj(opt.l, k * opt.arrayRadius * sin(sphCoord.elevation));
+        .* exp(1i * opt.l * azimuth)...
+        .* besselj(opt.l, k * opt.arrayRadius * sin(elevation));
     
     sig.samples{1} = E;
     sig.physical.frequency = opt.frequency;

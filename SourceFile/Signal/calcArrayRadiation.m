@@ -1,21 +1,15 @@
 function sig = calcArrayRadiation( opt )
-
+    narginchk(1,1);
     addpath('..\Common');
     % ≈–∂œ «∑Òø…”√
     if (isfield(opt, 'active') && ~opt.active)
       return;
     end  
     
-    if ~isfield(opt.sphCoord,'radius') ||...
-        isempty(opt.sphCoord.radius) ||... 
-        ~isfield(opt.sphCoord,'azimuth') ||...
-        isempty(opt.sphCoord.azimuth) ||... 
-        ~isfield(opt.sphCoord,'elevation') ||...
-        isempty(opt.sphCoord.elevation)
+    if ~isfield(opt,'sphCoord') ||...
+        isempty(opt.sphCoord)
         error('«Î ‰»Î–≈∫≈∑∂Œß');
     end
-    
-    sphCoord = opt.sphCoord ;
     
     if ~isfield(opt,'frequency') ||...
         isempty(opt.frequency) 
@@ -47,11 +41,15 @@ function sig = calcArrayRadiation( opt )
     opt = checkField(opt, 'elemPositionPhi', {'numeric'},{'size' [1,opt.nElem]},ones(1,opt.nElem));
     opt = checkField(opt, 'elemPositionRadius', {'numeric'},{'size' [1,opt.nElem]},ones(1,opt.nElem));
     
-    E = zeros(size(sphCoord.azimuth));
+    azimuth(:,:) = opt.sphCoord(1,:,:) ;
+    elevation(:,:) = opt.sphCoord(2,:,:) ;
+    radius(:,:) = opt.sphCoord(3,:,:);
     
+    E = zeros(size(azimuth));
+
     for n = 1:opt.nElem
-        E = E + exp(-1i*k*sphCoord.radius)./sphCoord.radius ...
-        .*exp(1i*k*opt.elemPositionRadius(n)*sin(sphCoord.elevation).*cos(sphCoord.azimuth-opt.elemPositionPhi(n)))...
+        E = E + exp(-1i*k*radius)./radius ...
+        .*exp(1i*k*opt.elemPositionRadius(n)*sin(elevation).*cos(azimuth-opt.elemPositionPhi(n)))...
         * opt.elemExcitation(n);
     end
 
