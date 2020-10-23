@@ -1,6 +1,5 @@
 function sig = calcArrayRadiation( opt )
     narginchk(1,1);
-    addpath('..\Common');
     % ≈–∂œ «∑Òø…”√
     if (isfield(opt, 'active') && ~opt.active)
       return;
@@ -41,9 +40,9 @@ function sig = calcArrayRadiation( opt )
     opt = checkField(opt, 'elemPositionPhi', {'numeric'},{'size' [1,opt.nElem]},ones(1,opt.nElem));
     opt = checkField(opt, 'elemPositionRadius', {'numeric'},{'size' [1,opt.nElem]},ones(1,opt.nElem));
     
-    azimuth(:,:) = opt.sphCoord(1,:,:) ;
+    radius(:,:) = opt.sphCoord(1,:,:);
     elevation(:,:) = opt.sphCoord(2,:,:) ;
-    radius(:,:) = opt.sphCoord(3,:,:);
+    azimuth(:,:) = opt.sphCoord(3,:,:) ;
     
     E = zeros(size(azimuth));
 

@@ -34,9 +34,9 @@ function sig = calcOAM( opt )
     
     opt = checkField(opt, 'arrayRadius', {'numeric'},{'real','nonnan'},2*lambda);
     
-    azimuth(:,:) = opt.sphCoord(1,:,:) ;
+    radius(:,:) = opt.sphCoord(1,:,:);
     elevation(:,:) = opt.sphCoord(2,:,:) ;
-    radius(:,:) = opt.sphCoord(3,:,:);
+    azimuth(:,:) = opt.sphCoord(3,:,:) ;
     
     % ====== º∆À„∑¯…‰≥° =======
     

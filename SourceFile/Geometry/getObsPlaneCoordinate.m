@@ -9,9 +9,9 @@ function [cartCoord,sphCoord] = getObsPlaneCoordinate(X,Y,z0)
     cartCoord(2,:,:) = y;
     cartCoord(3,:,:) = z;
     
-    sphCoord(1,:,:) = azimuth;
+    sphCoord(1,:,:) = radius;
     sphCoord(2,:,:) = elevation;
-    sphCoord(3,:,:) = radius;
+    sphCoord(3,:,:) = azimuth;
     
 end
 
