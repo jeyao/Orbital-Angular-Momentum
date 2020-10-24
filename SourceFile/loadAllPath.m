@@ -3,7 +3,7 @@ try
     addpath('.\Plot');
     addpath('.\Geometry');
     addpath('.\Signal');
-    addpath('.\Signal\Basic');
+    addpath('.\Signal\Baisc');
     addpath('.\Algorithm');
 catch
     error('Fail to load path.');
