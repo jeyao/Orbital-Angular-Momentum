@@ -67,24 +67,35 @@ opt.nElem = 80;
 opt.arrayRadius = 25*lambda;
 
 Sr = zeros(length(l),nFFT1);
+
 for i = 1:length(l)
     opt.l = l(i);
-    Srt = calcEchoSignal(opt)/besselj(l(i),k*opt.arrayRadius *sin(0.3*pi));
-    Srw=fft(Srt,nFFT1);
+    % Step I : demodulate signal
+    Srt = calcEchoSignal(opt)./ exp(-1j*2*pi*frequency*t);
     
+    % Step II : pulse compression
+    Srw=fft(Srt,nFFT1);
     Sot=ifft(Srw.*conj(Sw)); % Æ¥Åä
-    Sr(i,:) = Sot;
+    
+    % Step III : envelope correction
+    Sr(i,:) = Sot./besselj(l(i),k*opt.arrayRadius *sin(0.3*pi));    
 end
 
+% Step IV : FFT 
 Z = fftshift(fft(Sr,nFFT));
 z = abs( Z / nFFT );
-y = ((-nFFT)/2:(nFFT)/2-1)/nFFT*180*2;
+
 
 N0=fix(nFFT1/2-Nchirp/2);
-surf(t*c/2,y,z(:,N0:N0+Nwid-1));
+x = t*c/2;
+y = ((-nFFT)/2:(nFFT)/2-1)/nFFT*180*2;
+
+
+% plot
+surf(x,y,z(:,N0:N0+Nwid-1));
 shading interp;
 title('OAM¶þÎ¬³ÉÏñ');
-view(2);
 xlabel('Range/m');
 ylabel('Azimuth/¡ã');
 ylim([min(y),max(y)]);
+view(2);
