@@ -66,6 +66,7 @@ for i = 1: Q
     gTd=t-2*r(i)/c*ones(1,Nwid);
     S(:,i) = (getSr(l,gTd,T,B,Tr,frequency,61,1,phi(i),theta,arrayRadius)./exp(-1i*2*pi*frequency*tempT))';
 end
+
 Psi =eye(Q);
 A = S * Psi;
 theta = useOMP(nScatteringPoint,A,Sr);
