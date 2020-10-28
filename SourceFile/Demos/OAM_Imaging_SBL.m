@@ -71,12 +71,21 @@ end
 
 Psi =eye(Q);
 A = S * Psi;
-theta = useOMP(nScatteringPoint,A,Sr);
+% theta = useOMP(nScatteringPoint,A,Sr);
+OPTIONS		= SB2_UserOptions('iterations',100,...
+							  'diagnosticLevel', 2,...
+							  'monitor', 10);
+SETTINGS	= SB2_ParameterSettings('NoiseStd',0.1);
+[PARAMETER, HYPERPARAMETER, DIAGNOSTIC] = ...
+    SparseBayes("Gaussian", real(A), real(Sr), OPTIONS, SETTINGS);
 
-res = reshape(Psi * theta,[Phicount,Rcount]);
+theta = zeros(1,Q);
+theta(PARAMETER.Relevant) = PARAMETER.Value;
+res = reshape(Psi * theta',[Phicount,Rcount]);
+
 figure(1);
-surf(R,Phi/pi*180,abs(res))
-title("基于OMP的OAM二维成像");
+surf(R,Phi/pi*180,abs(res));
+title("基于SBL的OAM二维成像");
 xlabel("Range/m");
 ylabel("Azimuth/°");
-view(2)
+view(2);

@@ -10,7 +10,7 @@ end
 
 % ====== 基本参数 =======
 
-rangeL = 25;
+rangeL = 10;
 nFFT = 2^10 ;
 
 opt.nScatteringPoint = 2;
