@@ -82,13 +82,13 @@ for i = 1:length(l)
 end
 
 % Step IV : FFT 
-Z = fftshift(fft(Sr,nFFT));
-z = abs( Z / nFFT );
+Z = fftshift(fft(Sr,nFFT1));
+z = abs( Z / nFFT1 );
 
 
 N0=fix(nFFT1/2-Nchirp/2);
 x = t*c/2;
-y = ((-nFFT)/2:(nFFT)/2-1)/nFFT*180*2;
+y = ((-nFFT1)/2:(nFFT1)/2-1)/nFFT1*180*2;
 
 
 % plot
