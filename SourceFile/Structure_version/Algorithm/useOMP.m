@@ -1,32 +1,22 @@
-function x = useOMP(k, A, y)
-    xbeg = zeros(size(A,2),1);
+function theta = useOMP(y, A, k)
+%% Orthogonal Matching Pursuit (OMP) 
+% Inputs:
+%   - y Measurement vector
+%   - A Compressive sensing matrix
+%   - k Iteration step
 
-    support=[];
-
-    temp=y;
-
-    count = 1;
-
-    while count < k+1
-
-        ST = abs(A' * temp);
-
-        [~, b] = max(ST);
-
-        support = [support b];
-
-        xfinal = A(:, support)\y;
-
-        temp = y-A(:,support) * xfinal;
-
-        count = count + 1;
-
+    [M,N] = size(A);
+    theta = zeros(N,1);
+    aug = [];theta_pos = size(1,k);
+    r_n = y;
+    for i = 1: k
+        product  = abs(A' * r_n);
+        [~, pos] = max(abs(product));
+        aug = [aug A(:,pos)];
+        A(:,pos) = zeros(M,1);
+        theta_ls=(aug'*aug)^(-1)*aug'*y;
+        r_n = y-aug*theta_ls;
+        theta_pos(i)=pos;
     end
-
-    x = xbeg;
-
-    t = support';
-
-    x(t) = xfinal;
+    theta(theta_pos) = theta_ls ;
 end
-
