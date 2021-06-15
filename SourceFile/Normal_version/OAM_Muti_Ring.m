@@ -14,8 +14,8 @@ clc;clear;close all;
 
 %% Setting Parameters
 % Basic
-mode = 2;
 f0 = 20e9;
+mode = 2;
 
 c = 299792458;
 lambda = c / f0 ;
@@ -53,7 +53,7 @@ end
 intensity = E.*conj(E);
 phase = angle(E)/pi*180;
 
-%%
+%% Plot
 figure(1);
 subplot(221);surf(x,y,intensity);
 xlim([min(X),max(X)]);ylim([min(Y),max(Y)]);

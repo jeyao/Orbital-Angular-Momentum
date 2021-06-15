@@ -1,4 +1,4 @@
-%% DEMO - Vortex wave generation based on multi ring circular array
+%% DEMO - Vortex wave generation based on UCA
 %
 % Description: 
 %   1.产生模式数为2的OAM。
@@ -11,8 +11,9 @@
 clc;clear;close all;  
 
 %% Parameters
-c = 299792458;
 f0 = 20e9;
+
+c = 299792458;
 lambda = c / f0 ;
 k = 2.0 * pi / lambda; 
 
@@ -42,7 +43,7 @@ E = exp(-1i * k * radius)./radius...
 intensity = E.*conj(E);
 phase = angle(E)/pi*180;
 
-%%
+%% Plot
 figure(1);
 subplot(221);surf(x,y,intensity);
 xlim([min(X),max(X)]);ylim([min(Y),max(Y)]);

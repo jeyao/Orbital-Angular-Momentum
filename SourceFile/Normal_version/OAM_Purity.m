@@ -12,10 +12,9 @@ mode = 2;
 modesRange = -10:10;
 
 %% Parameters
+f0 = 18e9;
 
 c = 299792458 ;
-
-f0 = 18e9;
 lambda = c / f0;
 k = 2.0 * pi / lambda; 
 raduis = 2; 
@@ -45,5 +44,4 @@ puity = puity / sum(puity);
 %% Plot
 figure(1)
 bar(modesRange,puity,'k');
-xlabel('mode');ylabel('Amplitude');
-title('Puity of OAM');
+xlabel('mode');ylabel('Amplitude');title('Puity of OAM');
