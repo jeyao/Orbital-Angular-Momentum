@@ -27,10 +27,6 @@ N = 1024;
 elemNum = 16;
 arrRadius = 5*lambda;
 
-Z0 = 500*lambda;
-obsRange = 100*lambda;
-obsCount = 1024;
-
 %% Computed Parameters
 modes = -modeRange:1:modeRange ;
 rcs = ones(1,scatteringPointNum);
