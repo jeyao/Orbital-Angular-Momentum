@@ -1,41 +1,43 @@
-clc;
-clear;
-close all;
+%% DEMO - Vortex wave 2D target imaging based on OMP
+%
+% History :
+%   Yao - 2021.6.15 - v1.0
+%       1.Create File
 
+%%
+clc;clear;close all;  
 try 
     run('..\loadAllPath.m');
 catch
     error('Fail to load path.');
 end
-% ====== 基本参数 =======
 
-addpath('..\lib\SB2');
+%% Setting Parameters
+% Basic
+modeRange = 10;
+nSteppedFreq = 61;
+f0 = 9e9;
 
-rangeL = 10;
+c = 299792458;
+lambda = c / f0 ;
+k = 2.0 * pi / lambda; 
 
-nScatteringPoint = 3;
+% Target
+theta =0.3*pi;
+scatteringPointNum = 3;
 mRadius = [700,900,800];
-mElevation = [0.3,0.3,0.3]*pi;
+mElevation =  theta * ones(1,scatteringPointNum);
 mAzimuth = [30,80,50]/180*pi;
 
-arrayRadius = 0.03;
+%% Parameters
+N = 1024;
+elemNum = modeRange * 2 + 2;
+arrRadius = 25*lambda;
 
-% ====== 常数项 =======
-
-c = 299792458 ;  
-
-% ====== OAM模式数 =======
-
-l = -1*rangeL:1:rangeL ;
-
-% ====== 脉冲参数 =======
-
-T=1e-6;    % 脉冲宽度
-Tr=2e-6;  % 脉冲周期
-B=200e6;   % 带宽
-frequency = 9e9;
+Tp = 1e-6; 
+Tr = 2e-6; 
+B=180e6;
 fs=4*B;
-Ts=1/fs;
 
 Rmin=500;Rmax=1000; 
 Rcount = 80;
@@ -43,40 +45,48 @@ Rcount = 80;
 PhiMin = 0;PhiMax = pi;
 Phicount = 60;
 
-theta =0.3*pi;
+%% Computed Parameters
+modes = -modeRange:1:modeRange ;
+rcs = ones(1,scatteringPointNum);
 
+ts = 1/fs;
+sampleNum = ceil((2*(Rmax-Rmin)/c)/ts);
+sampleNum_fft = 2^nextpow2(2*sampleNum-1);
+tao = 2*mRadius'/c;
+t = linspace(2*Rmin/c,2*Rmax/c,sampleNum); 
+td = ones(scatteringPointNum,1)*t-tao*ones(1,sampleNum);
+
+%% Observation plane
 R = linspace(Rmin,Rmax,Rcount);
 Phi = linspace(PhiMin,PhiMax,Phicount);
 Q = Rcount * Phicount;
 [r,phi] = meshgrid(R,Phi);
 
-Rwid=Rmax-Rmin; 
-Twid=2*Rwid/c;
-Nwid=ceil(Twid/Ts);
-Nchirp=ceil(T/Ts);
+%% Measurement vector
+Sr = getSr(modes,td,Tp,B,Tr,f0,nSteppedFreq,rcs ,mAzimuth,mElevation,arrRadius);
 
-t=linspace(2*Rmin/c,2*Rmax/c,Nwid);  % 时间序列                                  
-td=ones(nScatteringPoint,1)*t-2*mRadius'/c*ones(1,Nwid);  % 添加时延
+tMat = repmat(t,1,length(modes));
+Sr = (Sr./exp(-1i*2*pi*f0*tMat))'; 
 
-Sr = getSr(l,td,T,B,Tr,frequency,61, [1,1,1],mAzimuth,mElevation,arrayRadius);
-
-tempT = repmat(t,1,length(l));
-Sr = (Sr./exp(-1i*2*pi*frequency*tempT))'; % 解调
-
+%% Compressive sensing matrix
 S = zeros(length(Sr),Q);
+
 for i = 1: Q
-    gTd=t-2*r(i)/c*ones(1,Nwid);
-    S(:,i) = (getSr(l,gTd,T,B,Tr,frequency,61,1,phi(i),theta,arrayRadius)./exp(-1i*2*pi*frequency*tempT))';
+    gTd=t-2*r(i)/c*ones(1,sampleNum);
+    S(:,i) = (getSr(modes,gTd,Tp,B,Tr,f0,nSteppedFreq,1,phi(i),theta,arrRadius)./exp(-1i*2*pi*f0*tMat))';
 end
 
 Psi =eye(Q);
 A = S * Psi;
-theta = useOMP(nScatteringPoint,A,Sr);
+
+%% OMP
+theta = useOMP(Sr,A,scatteringPointNum);
 
 res = reshape(Psi * theta,[Phicount,Rcount]);
+
+%% Plot
 figure(1);
 surf(R,Phi/pi*180,abs(res))
-title("基于OMP的OAM二维成像");
-xlabel("Range/m");
-ylabel("Azimuth/°");
-view(2)
+shading interp;
+xlabel('Range/m');ylabel('Azimuth/°');title('2D imaging(OMP)');
+view(2);
